@@ -37,16 +37,21 @@ def findcreases():
     global creases
     for x in range(0,len(tmfile)):
         if tmfile[x] == 'crse':
-            creases.append((vertices[int(tmfile[x+4])],vertices[int(tmfile[x+5])]))
+            mv = int(tmfile[x+8])+0
+            if mv==1:  #tm's mountains should be valley
+                mv = 3
+            elif mv ==3: #edges, like when you cut off the corner
+                mv = 1  
+            creases.append((vertices[int(tmfile[x+4])],vertices[int(tmfile[x+5])],mv))
             #also need to extract the m/v, or at least axial vs hinge vs ridge
 def cp(tm): #converts tm coordinates to .cp coordinates
     return (float(tm)*400)-200
 def makecp():
     global cpfile
-    cpfile = ["1 -200 -200 -200 200", "1 -200 200 200 200", "1 200 200 200 -200", "0 200 -200 -200 -200"]
+    cpfile = ["1 -200 -200 -200 200", "1 -200 200 200 200", "1 200 200 200 -200", "1 200 -200 -200 -200"]
     findcreases()
     for x in range(1, len(creases)):
-        cpfile.append("2 "+str(cp(creases[x][0][0]))+" "+str(cp(creases[x][0][1]))+" "+str(cp(creases[x][1][0]))+" "+str(cp(creases[x][1][1])))
+        cpfile.append(str(creases[x][2])+" "+str(cp(creases[x][0][0]))+" "+str(cp(creases[x][0][1]))+" "+str(cp(creases[x][1][0]))+" "+str(cp(creases[x][1][1])))
 
 
 def file_save():
@@ -70,3 +75,29 @@ enter.place(x=165,y=200)
 
 enter = Button(canvas2,text="export as .cp file",command=file_save)
 enter.place(x=165,y=300)
+
+#==============================================================================================================
+#============================================================================================================== for adding new features later
+'''
+gridsize = int(1/tmfile[4])+1
+
+class path():
+    #you need a pytha if max(x distance, y distance) > minlength
+    def __init__(index,length,minlength):
+        pass
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
